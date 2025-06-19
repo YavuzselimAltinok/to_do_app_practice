@@ -1,7 +1,11 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:state_management_practice/hive_service.dart';
 import 'controller.dart';
 
-void main() {
+void main() async {
+  await LocalDatabaseService.instance.initLocalDatabase();
+  Controller.instance.fetchTasks();
   runApp(const MainApp());
 }
 
@@ -44,12 +48,13 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SafeArea(
         child: Stack(
-          children: [
+          children: <Widget>[
             ListView.builder(
               itemBuilder: (BuildContext context, int index) {
                 return Task(
-                  taskName: Controller.instance.tasksNameList[index],
-                  taskCondition: Controller.instance.tasksIsDoneList[index],
+                  taskName: Controller.instance.tasks["tasksNameList"]?[index],
+                  taskCondition:
+                      Controller.instance.tasks["tasksIsDoneList"]?[index],
                   onTapDoneButton: () {
                     Controller.instance.changeIsDone(index);
                     setState(() {});
@@ -57,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                   rectangleColor: Controller.instance.getColor(index),
                 );
               },
-              itemCount: Controller.instance.tasksNameList.length,
+              itemCount: Controller.instance.tasks["tasksNameList"]?.length,
             ),
             Positioned(
               bottom: 16,
@@ -68,11 +73,12 @@ class _HomePageState extends State<HomePage> {
                   showDialog(
                     context: context,
                     builder: (BuildContext dialogContext) {
+                      Controller.instance.cleanTextEditingController();
                       return AlertDialog(
                         title: const Text("Add New Task"),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
+                          children: <Widget>[
                             TextField(
                               controller:
                                   Controller.instance.textEditingController,
@@ -109,7 +115,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class Task extends StatefulWidget {
+class Task extends StatelessWidget {
   const Task({
     super.key,
     required this.taskName,
@@ -124,40 +130,37 @@ class Task extends StatefulWidget {
   final Color rectangleColor;
 
   @override
-  State<Task> createState() => _TaskState();
-}
-
-class _TaskState extends State<Task> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: 56,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 32.0),
         child: Row(
-          children: [
-            const SizedBox(width: 24),
+          children: <Widget>[
             GestureDetector(
-              onTap: widget.onTapDoneButton,
+              onTap: onTapDoneButton,
               child: Container(
                 height: 24,
                 width: 24,
                 decoration: BoxDecoration(
-                  color: widget.rectangleColor,
+                  color: rectangleColor,
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
             ),
             const SizedBox(width: 16),
-            Text(
-              widget.taskName,
-              style: const TextStyle(fontSize: 18, letterSpacing: -0.17),
+            SizedBox(
+              width: 250,
+              child: AutoSizeText(
+                minFontSize: 14,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                taskName,
+                style: const TextStyle(fontSize: 18, letterSpacing: -0.17),
+              ),
             ),
+            const Spacer(),
+            FloatingActionButton(onPressed: () {}),
           ],
         ),
       ),
