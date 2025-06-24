@@ -20,6 +20,34 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
-  assets: 
+  fonts:
+  - family: Action_Man
+    fonts:
+      - asset: assets/fonts/Action_Man.ttf
+      - asset: assets/fonts/Action_Man_Bold.ttf
+        weight: 700
+      - asset: assets/fonts/Action_Man_Italic.ttf
+        style: italic
+      - asset: assets/fonts/Action_Man_Bold_Italic.ttf
+        weight: 700
+        style: italic
+  
+  - family: Action_Man_Extended
+    fonts:
+      - asset: assets/fonts/Action_Man_Extended.ttf
+      - asset: assets/fonts/Action_Man_Extended_Bold.ttf
+        weight: 700
+      - asset: assets/fonts/Action_Man_Extended_Italic.ttf
+        style: italic
+      - asset: assets/fonts/Action_Man_Extended_Bold_Italic.ttf
+        weight: 700
+        style: italic
+  
+  - family: Action_Man_Shaded
+    fonts:
+      - asset: assets/fonts/Action_Man_Shaded.ttf
+      - asset: assets/fonts/Action_Man_Shaded_Italic.ttf
+        style: italic
+  assets:
     - assets/icons/
   uses-material-design: true

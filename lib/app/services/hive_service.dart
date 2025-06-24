@@ -20,7 +20,7 @@ class LocalDatabaseService {
   }
 
   Map<String, List<dynamic>> getTasks() {
-    return {
+    return <String, List<dynamic>>{
       "tasksNameList": _tasksBox.get("tasksNameList") ?? <String>[],
       "tasksIsDoneList": _tasksBox.get("tasksIsDoneList") ?? <bool>[],
     };

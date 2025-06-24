@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:state_management_practice/hive_service.dart';
+import 'package:state_management_practice/app/services/hive_service.dart';
 
 class Controller {
   Controller._();
@@ -13,7 +13,7 @@ class Controller {
   void addTasksNameToList(String taskName) {
     tasks["tasksNameList"]?.add(taskName);
     LocalDatabaseService.instance.saveTasksNameToBox(
-      tasks["tasksNameList"] as List<String>,
+      tasks["tasksNameList"]! as List<String>,
     );
     fetchTasks();
   }
@@ -21,7 +21,7 @@ class Controller {
   void addTaskIsDoneList() {
     tasks["tasksIsDoneList"]?.add(false);
     LocalDatabaseService.instance.saveTasksIsDoneToBox(
-      tasks["tasksIsDoneList"] as List<bool>,
+      tasks["tasksIsDoneList"]! as List<bool>,
     );
     fetchTasks();
   }
@@ -29,7 +29,7 @@ class Controller {
   void changeIsDone(int index) {
     tasks["tasksIsDoneList"]?[index] = !tasks["tasksIsDoneList"]?[index];
     LocalDatabaseService.instance.saveTasksIsDoneToBox(
-      tasks["tasksIsDoneList"] as List<bool>,
+      tasks["tasksIsDoneList"]! as List<bool>,
     );
     fetchTasks();
   }
@@ -48,5 +48,14 @@ class Controller {
     textEditingController.clear();
   }
 
-  void removeTask() {}
+  void removeTask(int index) {
+    tasks["tasksNameList"]?.removeAt(index);
+    tasks["tasksIsDoneList"]?.removeAt(index);
+    LocalDatabaseService.instance.saveTasksNameToBox(
+      tasks["tasksNameList"]! as List<String>,
+    );
+    LocalDatabaseService.instance.saveTasksIsDoneToBox(
+      tasks["tasksIsDoneList"]! as List<bool>,
+    );
+  }
 }
