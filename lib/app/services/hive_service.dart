@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:state_management_practice/core/constants/app_constants.dart';
 
@@ -35,13 +34,12 @@ class LocalDatabaseService {
     _tasksBox.put(subTaskIsDoneListKey, subTaskIsDoneList);
   }
 
-  Map<String, List<dynamic>> getTasksMap() {
-    return <String, List<dynamic>>{
-      AppConstants.tasksNameListKey:
-          _tasksBox.get(AppConstants.tasksNameListKey) ?? <String>[],
-      AppConstants.tasksIsDoneListKey:
-          _tasksBox.get(AppConstants.tasksIsDoneListKey) ?? <bool>[],
-    };
+  List<String> getTasksNameList() {
+    return _tasksBox.get(AppConstants.tasksNameListKey) ?? <String>[];
+  }
+
+  List<bool> getTasksIsDoneList() {
+    return _tasksBox.get(AppConstants.tasksIsDoneListKey) ?? <bool>[];
   }
 
   List<String> getSubTasksList(String subTasksNameListKey) {
@@ -53,15 +51,12 @@ class LocalDatabaseService {
   }
 
   void removeTaskFromBox(int index) {
-    final Map<String, List<dynamic>> tasksMap = getTasksMap();
-    tasksMap[AppConstants.tasksNameListKey]?.removeAt(index);
-    tasksMap[AppConstants.tasksIsDoneListKey]?.removeAt(index);
-    saveTasksNameToBox(
-      tasksMap[AppConstants.tasksNameListKey]! as List<String>,
-    );
-    saveTasksIsDoneToBox(
-      tasksMap[AppConstants.tasksIsDoneListKey]! as List<bool>,
-    );
+    final List<String> taskNameList = getTasksNameList();
+    final List<bool> taskIsDoneList = getTasksIsDoneList();
+    taskNameList.removeAt(index);
+    taskIsDoneList.removeAt(index);
+    saveTasksNameToBox(taskNameList);
+    saveTasksIsDoneToBox(taskIsDoneList);
   }
 
   void removeSubTaskFromBox(String subTasksNameListKey, int index) {

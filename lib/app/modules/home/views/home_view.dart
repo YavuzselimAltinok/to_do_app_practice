@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:state_management_practice/app/modules/home/controllers/controller.dart';
 import 'package:state_management_practice/app/modules/home/widgets/task_widget.dart';
-import 'package:state_management_practice/core/constants/app_constants.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -43,11 +42,8 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Expanded(
-              child:
-                  (Controller
-                      .instance
-                      .tasks[AppConstants.tasksNameListKey] == null) ? 
-                   const Center(
+              child: Controller.instance.tasksNameList.isEmpty
+                  ? const Center(
                       child: Text(
                         'No categories yet.\nTap the + button to create your first category!',
                         textAlign: TextAlign.center,
@@ -55,13 +51,16 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     )
                   : ListView.builder(
-                      itemCount: Controller.instance.tasks[AppConstants.tasksNameListKey].length ?? 0;
+                      itemCount: Controller.instance.tasksNameList.length,
                       itemBuilder: (BuildContext context, int tileIndex) {
                         return ExpansionTile(
+                          //TODO : Remove down arrow icon
+                          //TODO : Add remove task button
                           title: Row(
                             children: <Widget>[
                               GestureDetector(
-                                onTap: () {},
+                                onTap:
+                                    () {}, //TODO : Add functionality to change color
                                 child: Container(
                                   height: 24,
                                   width: 24,
@@ -78,7 +77,7 @@ class _HomeViewState extends State<HomeView> {
                                   minFontSize: 14,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  Controller.instance.expansionTiles[tileIndex],
+                                  Controller.instance.tasksNameList[tileIndex],
                                   style: const TextStyle(
                                     fontSize: 18,
                                     letterSpacing: -0.17,
@@ -96,12 +95,13 @@ class _HomeViewState extends State<HomeView> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                           return Task(
+                                            // TODO : Modify to subtasks
                                             taskName: Controller
                                                 .instance
-                                                .tasks["tasksNameList"]?[index],
+                                                .tasksNameList[index],
                                             taskCondition: Controller
                                                 .instance
-                                                .tasks["tasksIsDoneList"]?[index],
+                                                .tasksIsDoneList[index],
                                             onTapDoneButton: () {
                                               Controller.instance.changeIsDone(
                                                 index,
@@ -120,8 +120,8 @@ class _HomeViewState extends State<HomeView> {
                                         },
                                     itemCount: Controller
                                         .instance
-                                        .tasks["tasksNameList"]
-                                        ?.length,
+                                        .tasksNameList
+                                        .length,
                                   ),
                                   Positioned(
                                     bottom: 16,
@@ -220,9 +220,11 @@ class _HomeViewState extends State<HomeView> {
                           .text
                           .isNotEmpty) {
                         setState(() {
-                          Controller.instance.addExpansionTile(
+                          // TODO : Add the new category to the list
+                          Controller.instance.addTasksNameToList(
                             Controller.instance.tileEditingController.text,
                           );
+                          Controller.instance.addTaskIsDoneList();
                         });
                         Navigator.of(dialogContext).pop();
                       }

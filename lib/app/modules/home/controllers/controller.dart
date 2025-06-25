@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:state_management_practice/app/services/hive_service.dart';
-import 'package:state_management_practice/core/constants/app_constants.dart';
 
 class Controller {
   Controller._();
-  late Map<String, List<dynamic>> tasks;
+  List<String> tasksNameList = <String>[];
+  List<bool> tasksIsDoneList = <bool>[];
   late List<String> subTasksList;
   late List<bool> subTaskIsDoneList;
 
   static final Controller instance = Controller._();
 
   void fetchTasks() {
-    tasks = LocalDatabaseService.instance.getTasksMap();
+    tasksNameList = LocalDatabaseService.instance.getTasksNameList();
+    tasksIsDoneList = LocalDatabaseService.instance.getTasksIsDoneList();
   }
 
   void addTasksNameToList(String taskName) {
-    tasks[AppConstants.tasksNameListKey]?.add(taskName);
-    LocalDatabaseService.instance.saveTasksNameToBox(
-      tasks[AppConstants.tasksNameListKey]! as List<String>,
-    );
+    tasksNameList.add(taskName);
+    LocalDatabaseService.instance.saveTasksNameToBox(tasksNameList);
     fetchTasks();
   }
 
   void addTaskIsDoneList() {
-    tasks[AppConstants.tasksIsDoneListKey]?.add(false);
-    LocalDatabaseService.instance.saveTasksIsDoneToBox(
-      tasks[AppConstants.tasksIsDoneListKey]! as List<bool>,
-    );
+    tasksIsDoneList.add(false);
+    LocalDatabaseService.instance.saveTasksIsDoneToBox(tasksIsDoneList);
     fetchTasks();
   }
 
@@ -46,17 +43,13 @@ class Controller {
   }
 
   void changeIsDone(int index) {
-    tasks[AppConstants.tasksIsDoneListKey]?[index] =
-        !tasks[AppConstants.tasksIsDoneListKey]?[index];
-    LocalDatabaseService.instance.saveTasksIsDoneToBox(
-      tasks[AppConstants.tasksIsDoneListKey]! as List<bool>,
-    );
+    tasksIsDoneList[index] = !tasksIsDoneList[index];
+    LocalDatabaseService.instance.saveTasksIsDoneToBox(tasksIsDoneList);
     fetchTasks();
   }
 
-  Color getColor(int index) => tasks[AppConstants.tasksIsDoneListKey]?[index]
-      ? Colors.green
-      : Colors.black;
+  Color getColor(int index) =>
+      tasksIsDoneList[index] ? Colors.green : Colors.black;
   // if (tasksIsDoneList[index]) {
   //   return Colors.green;
   // } else {
@@ -75,18 +68,14 @@ class Controller {
   }
 
   void removeTask(int index) {
-    tasks[AppConstants.tasksNameListKey]?.removeAt(index);
-    tasks[AppConstants.tasksIsDoneListKey]?.removeAt(index);
-    LocalDatabaseService.instance.saveTasksNameToBox(
-      tasks[AppConstants.tasksNameListKey]! as List<String>,
-    );
-    LocalDatabaseService.instance.saveTasksIsDoneToBox(
-      tasks[AppConstants.tasksIsDoneListKey]! as List<bool>,
-    );
+    tasksNameList.removeAt(index);
+    tasksIsDoneList.removeAt(index);
+    LocalDatabaseService.instance.saveTasksNameToBox(tasksNameList);
+    LocalDatabaseService.instance.saveTasksIsDoneToBox(tasksIsDoneList);
   }
 
   double calculateListHeight() {
-    final int taskCount = tasks[AppConstants.tasksNameListKey]?.length ?? 0;
+    final int taskCount = tasksIsDoneList.length;
 
     if (taskCount == 0) {
       return 80.0; // Minimum height for the FloatingActionButton
