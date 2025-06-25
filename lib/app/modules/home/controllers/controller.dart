@@ -5,10 +5,13 @@ import 'package:state_management_practice/core/constants/app_constants.dart';
 class Controller {
   Controller._();
   late Map<String, List<dynamic>> tasks;
+  late List<String> subTasksList;
+  late List<bool> subTaskIsDoneList;
+
   static final Controller instance = Controller._();
 
   void fetchTasks() {
-    tasks = LocalDatabaseService.instance.getTasks();
+    tasks = LocalDatabaseService.instance.getTasksMap();
   }
 
   void addTasksNameToList(String taskName) {
@@ -27,10 +30,17 @@ class Controller {
     fetchTasks();
   }
 
-  void addSubTasksNameList(String subTaskName) {
-    tasks[AppConstants.tasksNameListKey]?.add(subTaskName);
-    LocalDatabaseService.instance.saveTasksNameToBox(
-      tasks[AppConstants.tasksNameListKey]! as List<String>,
+  void addSubTasksNameList(String key, String subTaskName) {
+    subTasksList.add(subTaskName);
+    LocalDatabaseService.instance.saveSubTasksNameToBox(key, subTasksList);
+    fetchTasks();
+  }
+
+  void addSubTaskIsDoneList(String key, bool subTaskIsDone) {
+    subTaskIsDoneList.add(subTaskIsDone);
+    LocalDatabaseService.instance.saveSubTaskIsDoneToBox(
+      key,
+      subTaskIsDoneList,
     );
     fetchTasks();
   }
@@ -62,10 +72,6 @@ class Controller {
 
   void cleanTileEditingController() {
     tileEditingController.clear();
-  }
-
-  void addExpansionTile(String tileName) {
-    expansionTiles.add(tileName);
   }
 
   void removeTask(int index) {

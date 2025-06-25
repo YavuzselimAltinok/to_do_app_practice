@@ -21,11 +21,21 @@ class LocalDatabaseService {
     _tasksBox.put(AppConstants.tasksIsDoneListKey, tasksIsDoneList);
   }
 
-  void saveSubTasksNameToBox(String key, List<String> subTasksNameList) {
-    _tasksBox.put(key, subTasksNameList);
+  void saveSubTasksNameToBox(
+    String subTasksNameListKey,
+    List<String> subTasksNameList,
+  ) {
+    _tasksBox.put(subTasksNameListKey, subTasksNameList);
   }
 
-  Map<String, List<dynamic>> getTasks() {
+  void saveSubTaskIsDoneToBox(
+    String subTaskIsDoneListKey,
+    List<bool> subTaskIsDoneList,
+  ) {
+    _tasksBox.put(subTaskIsDoneListKey, subTaskIsDoneList);
+  }
+
+  Map<String, List<dynamic>> getTasksMap() {
     return <String, List<dynamic>>{
       AppConstants.tasksNameListKey:
           _tasksBox.get(AppConstants.tasksNameListKey) ?? <String>[],
@@ -34,12 +44,16 @@ class LocalDatabaseService {
     };
   }
 
-  Map<String, List<dynamic>> getSubTasks(String key) {
-    return <String, List<dynamic>>{key: _tasksBox.get(key) ?? <String>[]};
+  List<String> getSubTasksList(String subTasksNameListKey) {
+    return _tasksBox.get(subTasksNameListKey) ?? <String>[];
+  }
+
+  List<bool> getSubTaskIsDoneList(String subTaskIsDoneListKey) {
+    return _tasksBox.get(subTaskIsDoneListKey) ?? <bool>[];
   }
 
   void removeTaskFromBox(int index) {
-    final Map<String, List<dynamic>> tasksMap = getTasks();
+    final Map<String, List<dynamic>> tasksMap = getTasksMap();
     tasksMap[AppConstants.tasksNameListKey]?.removeAt(index);
     tasksMap[AppConstants.tasksIsDoneListKey]?.removeAt(index);
     saveTasksNameToBox(
@@ -50,15 +64,17 @@ class LocalDatabaseService {
     );
   }
 
-  void removeSubTaskFromBox(int index) {
-    final Map<String, List<dynamic>> SubTasksMap = getSubTasks();
-    tasksMap[AppConstants.tasksNameListKey]?.removeAt(index);
-    tasksMap[AppConstants.tasksIsDoneListKey]?.removeAt(index);
-    saveTasksNameToBox(
-      tasksMap[AppConstants.tasksNameListKey]! as List<String>,
+  void removeSubTaskFromBox(String subTasksNameListKey, int index) {
+    final List<String> subTasksList = getSubTasksList(subTasksNameListKey);
+    subTasksList.removeAt(index);
+    saveSubTasksNameToBox(subTasksNameListKey, subTasksList);
+  }
+
+  void removeSubTaskIsDoneFromBox(String subTaskIsDoneListKey, int index) {
+    final List<bool> subTaskIsDoneList = getSubTaskIsDoneList(
+      subTaskIsDoneListKey,
     );
-    saveTasksIsDoneToBox(
-      tasksMap[AppConstants.tasksIsDoneListKey]! as List<bool>,
-    );
+    subTaskIsDoneList.removeAt(index);
+    saveSubTaskIsDoneToBox(subTaskIsDoneListKey, subTaskIsDoneList);
   }
 }

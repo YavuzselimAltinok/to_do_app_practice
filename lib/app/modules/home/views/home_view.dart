@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:state_management_practice/app/modules/home/controllers/controller.dart';
 import 'package:state_management_practice/app/modules/home/widgets/task_widget.dart';
+import 'package:state_management_practice/core/constants/app_constants.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -42,8 +43,11 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Expanded(
-              child: Controller.instance.expansionTiles.isEmpty
-                  ? const Center(
+              child:
+                  (Controller
+                      .instance
+                      .tasks[AppConstants.tasksNameListKey] == null) ? 
+                   const Center(
                       child: Text(
                         'No categories yet.\nTap the + button to create your first category!',
                         textAlign: TextAlign.center,
@@ -51,7 +55,7 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     )
                   : ListView.builder(
-                      itemCount: Controller.instance.expansionTiles.length,
+                      itemCount: Controller.instance.tasks[AppConstants.tasksNameListKey].length ?? 0;
                       itemBuilder: (BuildContext context, int tileIndex) {
                         return ExpansionTile(
                           title: Row(
