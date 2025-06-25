@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:state_management_practice/app/modules/home/controllers/controller.dart';
 import 'package:state_management_practice/app/modules/home/widgets/task_widget.dart';
@@ -20,7 +21,7 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       body: SafeArea(
         child: Column(
-          children: [
+          children: <Widget>[
             const SizedBox(
               width: double.infinity,
               height: 80,
@@ -41,83 +42,195 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Expanded(
-              child: Stack(
-                children: <Widget>[
-                  ListView.builder(
-                    itemBuilder: (BuildContext context, int index) {
-                      return Task(
-                        taskName:
-                            Controller.instance.tasks["tasksNameList"]?[index],
-                        taskCondition: Controller
-                            .instance
-                            .tasks["tasksIsDoneList"]?[index],
-                        onTapDoneButton: () {
-                          Controller.instance.changeIsDone(index);
-                          setState(() {});
-                        },
-                        rectangleColor: Controller.instance.getColor(index),
-                        onTapRevomeTaskButton: () {
-                          Controller.instance.removeTask(index);
-                          setState(() {});
-                        },
-                      );
-                    },
-                    itemCount:
-                        Controller.instance.tasks["tasksNameList"]?.length,
-                  ),
-                  Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: FloatingActionButton(
-                      child: const Icon(Icons.add),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext dialogContext) {
-                            Controller.instance.cleanTextEditingController();
-                            return AlertDialog(
-                              title: const Text("Add New Task"),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
+              child: Controller.instance.expansionTiles.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No categories yet.\nTap the + button to create your first category!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: Controller.instance.expansionTiles.length,
+                      itemBuilder: (BuildContext context, int tileIndex) {
+                        return ExpansionTile(
+                          title: Row(
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  height: 24,
+                                  width: 24,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              SizedBox(
+                                width: 250,
+                                child: AutoSizeText(
+                                  minFontSize: 14,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  Controller.instance.expansionTiles[tileIndex],
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    letterSpacing: -0.17,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          children: <Widget>[
+                            SizedBox(
+                              height: Controller.instance.calculateListHeight(),
+                              child: Stack(
                                 children: <Widget>[
-                                  TextField(
-                                    controller: Controller
+                                  ListView.builder(
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                          return Task(
+                                            taskName: Controller
+                                                .instance
+                                                .tasks["tasksNameList"]?[index],
+                                            taskCondition: Controller
+                                                .instance
+                                                .tasks["tasksIsDoneList"]?[index],
+                                            onTapDoneButton: () {
+                                              Controller.instance.changeIsDone(
+                                                index,
+                                              );
+                                              setState(() {});
+                                            },
+                                            rectangleColor: Controller.instance
+                                                .getColor(index),
+                                            onTapRevomeTaskButton: () {
+                                              Controller.instance.removeTask(
+                                                index,
+                                              );
+                                              setState(() {});
+                                            },
+                                          );
+                                        },
+                                    itemCount: Controller
                                         .instance
-                                        .textEditingController,
-                                    decoration: const InputDecoration(
-                                      hintText: "Enter task details",
+                                        .tasks["tasksNameList"]
+                                        ?.length,
+                                  ),
+                                  Positioned(
+                                    bottom: 16,
+                                    right: 16,
+                                    child: FloatingActionButton(
+                                      child: const Icon(Icons.add),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext dialogContext) {
+                                            Controller.instance
+                                                .cleanTextEditingController();
+                                            return AlertDialog(
+                                              title: const Text("Add New Task"),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  TextField(
+                                                    controller: Controller
+                                                        .instance
+                                                        .textEditingController,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                          hintText:
+                                                              "Enter task details",
+                                                        ),
+                                                  ),
+                                                  const SizedBox(height: 20),
+                                                ],
+                                              ),
+                                              actions: <Widget>[
+                                                FloatingActionButton(
+                                                  onPressed: () {
+                                                    Controller.instance
+                                                        .addTasksNameToList(
+                                                          Controller
+                                                              .instance
+                                                              .textEditingController
+                                                              .text,
+                                                        );
+                                                    Controller.instance
+                                                        .addTaskIsDoneList();
+                                                    setState(() {});
+                                                    Navigator.of(
+                                                      dialogContext,
+                                                    ).pop();
+                                                  },
+                                                  child: const Icon(
+                                                    Icons.check,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
                                 ],
                               ),
-                              actions: <Widget>[
-                                FloatingActionButton(
-                                  onPressed: () {
-                                    Controller.instance.addTasksNameToList(
-                                      Controller
-                                          .instance
-                                          .textEditingController
-                                          .text,
-                                    );
-                                    Controller.instance.addTaskIsDoneList();
-                                    setState(() {});
-                                    Navigator.of(dialogContext).pop();
-                                  },
-                                  child: const Icon(Icons.check),
-                                ),
-                              ],
-                            );
-                          },
+                            ),
+                          ],
                         );
                       },
                     ),
-                  ),
-                ],
-              ),
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext dialogContext) {
+              Controller.instance.cleanTileEditingController();
+              return AlertDialog(
+                title: const Text("Create New Category"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: Controller.instance.tileEditingController,
+                      decoration: const InputDecoration(
+                        hintText: "Enter category name",
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+                actions: <Widget>[
+                  FloatingActionButton(
+                    onPressed: () {
+                      if (Controller
+                          .instance
+                          .tileEditingController
+                          .text
+                          .isNotEmpty) {
+                        setState(() {
+                          Controller.instance.addExpansionTile(
+                            Controller.instance.tileEditingController.text,
+                          );
+                        });
+                        Navigator.of(dialogContext).pop();
+                      }
+                    },
+                    child: const Icon(Icons.check),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: const Icon(Icons.category),
       ),
     );
   }
