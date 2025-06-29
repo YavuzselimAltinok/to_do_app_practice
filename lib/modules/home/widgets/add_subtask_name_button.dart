@@ -11,7 +11,11 @@ class AddSubtaskNameButton extends StatelessWidget {
       bottom: 16,
       right: 16,
       child: IconButton(
-        icon: Image.asset('assets/icons/add_icon.png', width: 48, height: 48),
+        icon: Image.asset(
+          'assets/icons/add_icon.png', // TODO: Use a constant for the icon path
+          width: 48,
+          height: 48,
+        ),
         onPressed: () {
           showDialog(
             context: context,
