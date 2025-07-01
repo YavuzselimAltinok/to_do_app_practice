@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:state_management_practice/core/constants/app_colors.dart';
+import 'package:state_management_practice/core/constants/app_icons.dart';
 import 'package:state_management_practice/modules/home/controllers/home_controller.dart';
 
 class AddSubtaskNameButton extends StatelessWidget {
@@ -11,11 +13,7 @@ class AddSubtaskNameButton extends StatelessWidget {
       bottom: 16,
       right: 16,
       child: IconButton(
-        icon: Image.asset(
-          'assets/icons/add_icon.png', // TODO: Use a constant for the icon path
-          width: 48,
-          height: 48,
-        ),
+        icon: Image.asset(AppIcons.add, width: 48, height: 48),
         onPressed: () {
           showDialog(
             context: context,
@@ -37,7 +35,7 @@ class AddSubtaskNameButton extends StatelessWidget {
                 ),
                 actions: <Widget>[
                   FloatingActionButton(
-                    backgroundColor: const Color.fromARGB(255, 54, 34, 82),
+                    backgroundColor: AppColors.appMainColor,
                     onPressed: () {
                       HomeController.instance.addSubTasksNameList(
                         HomeController.instance.textEditingController.text,
@@ -46,7 +44,7 @@ class AddSubtaskNameButton extends StatelessWidget {
                       HomeController.instance.addSubTaskIsDoneList(tileIndex);
                       Navigator.of(dialogContext).pop();
                     },
-                    child: const Icon(Icons.check, color: Colors.white),
+                    child: const Icon(Icons.check, color: AppColors.white),
                   ),
                 ],
               );

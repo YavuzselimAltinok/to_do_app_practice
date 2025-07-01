@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:state_management_practice/core/constants/app_text_styles.dart';
 
 class CustomAppbar extends StatelessWidget {
   const CustomAppbar({super.key});
@@ -15,12 +16,7 @@ class CustomAppbar extends StatelessWidget {
           child: Text(
             ' Tasked',
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontFamily: 'inter',
-              fontSize: 40.0,
-              fontWeight: FontWeight.w700,
-              color: Colors.black,
-            ),
+            style: AppTextStyles.appBarTitle,
           ),
         ),
       ),

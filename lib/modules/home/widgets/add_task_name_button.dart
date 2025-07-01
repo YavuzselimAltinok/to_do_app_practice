@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:state_management_practice/core/constants/app_colors.dart';
+import 'package:state_management_practice/core/constants/app_icons.dart';
 import 'package:state_management_practice/modules/home/controllers/home_controller.dart';
 
 class AddTaskNameButton extends StatelessWidget {
@@ -20,7 +22,7 @@ class AddTaskNameButton extends StatelessWidget {
               ),
               actions: <Widget>[
                 FloatingActionButton(
-                  backgroundColor: const Color.fromARGB(255, 54, 34, 82),
+                  backgroundColor: AppColors.appMainColor,
                   onPressed: () {
                     if (HomeController
                         .instance
@@ -34,14 +36,14 @@ class AddTaskNameButton extends StatelessWidget {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const Icon(Icons.check, color: Colors.white),
+                  child: const Icon(Icons.check, color: AppColors.white),
                 ),
               ],
             );
           },
         );
       },
-      icon: Image.asset('assets/icons/add_icon.png', width: 48, height: 48),
+      icon: Image.asset(AppIcons.add, width: 48, height: 48),
     );
   }
 }

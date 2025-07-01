@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:state_management_practice/core/constants/app_icons.dart';
+import 'package:state_management_practice/core/constants/app_text_styles.dart';
 import 'package:state_management_practice/core/services/hive_service.dart';
 
 class HomeController extends ChangeNotifier {
@@ -11,6 +13,14 @@ class HomeController extends ChangeNotifier {
     tasksNameList = HiveService.instance.getTasksNameList();
     tasksIsDoneList = HiveService.instance.getTasksIsDoneList();
     notifyListeners();
+  }
+
+  List<String> subTasksListGetter(String subTasksNameListKey) {
+    return HiveService.instance.getSubTasksList(subTasksNameListKey);
+  }
+
+  List<bool> subTaskIsDoneListGetter(String subTaskIsDoneListKey) {
+    return HiveService.instance.getSubTaskIsDoneList(subTaskIsDoneListKey);
   }
 
   void addTasksNameToList(String taskName) {
@@ -53,6 +63,21 @@ class HomeController extends ChangeNotifier {
   void changeIsDone(int index) {
     tasksIsDoneList[index] = !tasksIsDoneList[index];
     HiveService.instance.saveTasksIsDoneToBox(tasksIsDoneList);
+    final List<bool> subTaskIsDoneList = HiveService.instance
+        .getSubTaskIsDoneList(tasksNameList[index]);
+    if (tasksIsDoneList[index]) {
+      subTaskIsDoneList.fillRange(0, subTaskIsDoneList.length, true);
+      HiveService.instance.saveSubTaskIsDoneToBox(
+        tasksNameList[index],
+        subTaskIsDoneList,
+      );
+    } else {
+      subTaskIsDoneList.fillRange(0, subTaskIsDoneList.length, false);
+      HiveService.instance.saveSubTaskIsDoneToBox(
+        tasksNameList[index],
+        subTaskIsDoneList,
+      );
+    }
     fetchTasks();
   }
 
@@ -64,45 +89,40 @@ class HomeController extends ChangeNotifier {
       tasksNameList[taskIndex],
       subTaskIsDoneList,
     );
+    if (!subTaskIsDoneList.contains(false)) {
+      tasksIsDoneList[taskIndex] = true;
+    } else {
+      tasksIsDoneList[taskIndex] = false;
+    }
     fetchTasks();
   }
 
   AssetImage getTaskIcon(int index) {
     return tasksIsDoneList[index]
-        ? const AssetImage('assets/icons/task_done_icon.png')
-        : const AssetImage('assets/icons/task_undone_icon.png');
+        ? const AssetImage(AppIcons.taskDoneIcon)
+        : const AssetImage(AppIcons.taskUndoneIcon);
   }
 
   TextStyle getTaskTextStyle(int index) {
     return tasksIsDoneList[index]
-        ? const TextStyle(
-            fontSize: 18,
-            letterSpacing: -0.17,
-            decoration: TextDecoration.lineThrough,
-            color: Color.fromARGB(255, 73, 73, 73),
-          )
-        : const TextStyle(fontSize: 18, letterSpacing: -0.17);
+        ? AppTextStyles.taskNameDoneTextStyle
+        : AppTextStyles.taskNameTextStyle;
   }
 
   AssetImage getSubTaskIcon(int taskIndex, int subTaskIndex) {
     final List<bool> subTaskIsDoneList = HiveService.instance
         .getSubTaskIsDoneList(tasksNameList[taskIndex]);
     return subTaskIsDoneList[subTaskIndex]
-        ? const AssetImage('assets/icons/subtask_done_icon.png')
-        : const AssetImage('assets/icons/subtask_undone_icon.png');
+        ? const AssetImage(AppIcons.subtaskDoneIcon)
+        : const AssetImage(AppIcons.subtaskUndoneIcon);
   }
 
   TextStyle getSubTaskTextStyle(int taskIndex, int subTaskIndex) {
     final List<bool> subTaskIsDoneList = HiveService.instance
         .getSubTaskIsDoneList(tasksNameList[taskIndex]);
     return subTaskIsDoneList[subTaskIndex]
-        ? const TextStyle(
-            fontSize: 18,
-            letterSpacing: -0.17,
-            decoration: TextDecoration.lineThrough,
-            color: Color.fromARGB(255, 73, 73, 73),
-          )
-        : const TextStyle(fontSize: 18, letterSpacing: -0.17);
+        ? AppTextStyles.taskNameDoneTextStyle
+        : AppTextStyles.taskNameTextStyle;
   }
 
   TextEditingController textEditingController = TextEditingController();

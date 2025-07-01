@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:state_management_practice/core/constants/app_icons.dart';
 import 'package:state_management_practice/modules/home/controllers/home_controller.dart';
 
 class CategoryTileWidget extends StatelessWidget {
@@ -41,11 +42,7 @@ class CategoryTileWidget extends StatelessWidget {
           onPressed: () {
             HomeController.instance.removeTaskFromBox(tileIndex);
           },
-          icon: Image.asset(
-            'assets/icons/delete_icon.png',
-            width: 24,
-            height: 24,
-          ),
+          icon: Image.asset(AppIcons.delete, width: 24, height: 24),
         ),
       ],
     );

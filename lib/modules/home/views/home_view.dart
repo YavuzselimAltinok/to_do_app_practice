@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:state_management_practice/core/services/hive_service.dart';
+import 'package:state_management_practice/core/constants/app_colors.dart';
 import 'package:state_management_practice/modules/home/controllers/home_controller.dart';
 import 'package:state_management_practice/modules/home/widgets/add_subtask_name_button.dart';
 import 'package:state_management_practice/modules/home/widgets/add_task_name_button.dart';
 import 'package:state_management_practice/modules/home/widgets/category_tile_widget.dart';
 import 'package:state_management_practice/modules/home/widgets/custom_appbar.dart';
 import 'package:state_management_practice/modules/home/widgets/empty_state_widget.dart';
-import 'package:state_management_practice/modules/home/widgets/task_widget.dart';
+import 'package:state_management_practice/modules/home/widgets/subtask_widget.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -46,13 +46,8 @@ class _HomeViewState extends State<HomeView> {
                       itemCount: HomeController.instance.tasksNameList.length,
                       itemBuilder: (BuildContext context, int tileIndex) {
                         return ExpansionTile(
-                          backgroundColor: const Color.fromARGB(
-                            //TODO: Create app color constants
-                            28,
-                            121,
-                            121,
-                            121,
-                          ),
+                          backgroundColor:
+                              AppColors.expansionTileBackgroundColor,
                           showTrailingIcon: false,
                           title: CategoryTileWidget(tileIndex: tileIndex),
                           children: <Widget>[
@@ -62,48 +57,51 @@ class _HomeViewState extends State<HomeView> {
                               child: Stack(
                                 children: <Widget>[
                                   ListView.builder(
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return Task(
-                                        // TODO : Modify to subtasks
-                                        subTaskName: HiveService
-                                            .instance //TODO : Service code cannot be in UI code
-                                            .getSubTasksList(
-                                              HomeController
-                                                  .instance
-                                                  .tasksNameList[tileIndex],
-                                            )[index],
-                                        subTaskCondition: HiveService.instance
-                                            .getSubTaskIsDoneList(
-                                              HomeController
-                                                  .instance
-                                                  .tasksNameList[tileIndex],
-                                            )[index],
-                                        onTapDoneButton: () {
-                                          HomeController.instance
-                                              .changeSubTaskIsDone(
-                                                tileIndex,
-                                                index,
-                                              );
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                          return SubTask(
+                                            subTaskName: HomeController.instance
+                                                .subTasksListGetter(
+                                                  HomeController
+                                                      .instance
+                                                      .tasksNameList[tileIndex],
+                                                )[index],
+                                            subTaskCondition: HomeController
+                                                .instance
+                                                .subTaskIsDoneListGetter(
+                                                  HomeController
+                                                      .instance
+                                                      .tasksNameList[tileIndex],
+                                                )[index],
+                                            onTapDoneButton: () {
+                                              HomeController.instance
+                                                  .changeSubTaskIsDone(
+                                                    tileIndex,
+                                                    index,
+                                                  );
+                                            },
+                                            subtaskIcon: HomeController.instance
+                                                .getSubTaskIcon(
+                                                  tileIndex,
+                                                  index,
+                                                ),
+                                            onTapRevomeSubTaskButton: () {
+                                              HomeController.instance
+                                                  .removeSubTaskFromBox(
+                                                    tileIndex,
+                                                    index,
+                                                  );
+                                            },
+                                            subTaskTextStyle: HomeController
+                                                .instance
+                                                .getSubTaskTextStyle(
+                                                  tileIndex,
+                                                  index,
+                                                ),
+                                          );
                                         },
-                                        subtaskIcon: HomeController.instance
-                                            .getSubTaskIcon(tileIndex, index),
-                                        onTapRevomeSubTaskButton: () {
-                                          HomeController.instance
-                                              .removeSubTaskFromBox(
-                                                tileIndex,
-                                                index,
-                                              );
-                                        },
-                                        subTaskTextStyle: HomeController
-                                            .instance
-                                            .getSubTaskTextStyle(
-                                              tileIndex,
-                                              index,
-                                            ),
-                                      );
-                                    },
-                                    itemCount: HiveService.instance
-                                        .getSubTasksList(
+                                    itemCount: HomeController.instance
+                                        .subTasksListGetter(
                                           HomeController
                                               .instance
                                               .tasksNameList[tileIndex],
