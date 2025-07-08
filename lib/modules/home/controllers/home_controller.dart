@@ -94,6 +94,7 @@ class HomeController extends ChangeNotifier {
     } else {
       tasksIsDoneList[taskIndex] = false;
     }
+    HiveService.instance.saveTasksIsDoneToBox(tasksIsDoneList);
     fetchTasks();
   }
 

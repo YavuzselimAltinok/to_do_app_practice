@@ -44,6 +44,7 @@ class AddTaskNameButton extends StatelessWidget {
         );
       },
       icon: Image.asset(AppIcons.add, width: 48, height: 48),
+      tooltip: 'Add Task',
     );
   }
 }

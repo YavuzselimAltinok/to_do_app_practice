@@ -19,17 +19,17 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    HomeController.instance.addListener(() {
-      setState(() {});
-    });
+    HomeController.instance.addListener(_onHomeStateChanged);
   }
 
   @override
   void dispose() {
-    HomeController.instance.removeListener(() {
-      setState(() {});
-    });
+    HomeController.instance.removeListener(_onHomeStateChanged);
     super.dispose();
+  }
+
+  void _onHomeStateChanged() {
+    setState(() {});
   }
 
   @override

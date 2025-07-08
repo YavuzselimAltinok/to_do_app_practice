@@ -35,19 +35,35 @@ class HiveService {
   }
 
   List<String> getTasksNameList() {
-    return _tasksBox.get(AppConstants.tasksNameListKey) ?? <String>[];
+    final dynamic rawList = _tasksBox.get(AppConstants.tasksNameListKey);
+    if (rawList == null) {
+      return <String>[];
+    }
+    return (rawList as List<dynamic>).cast<String>();
   }
 
   List<bool> getTasksIsDoneList() {
-    return _tasksBox.get(AppConstants.tasksIsDoneListKey) ?? <bool>[];
+    final dynamic rawList = _tasksBox.get(AppConstants.tasksIsDoneListKey);
+    if (rawList == null) {
+      return <bool>[];
+    }
+    return (rawList as List<dynamic>).cast<bool>();
   }
 
   List<String> getSubTasksList(String subTasksNameListKey) {
-    return _tasksBox.get(subTasksNameListKey) ?? <String>[];
+    final dynamic rawList = _tasksBox.get(subTasksNameListKey);
+    if (rawList == null) {
+      return <String>[];
+    }
+    return (rawList as List<dynamic>).cast<String>();
   }
 
   List<bool> getSubTaskIsDoneList(String subTasksNameListKey) {
-    return _tasksBox.get('${subTasksNameListKey}_done') ?? <bool>[];
+    final dynamic rawList = _tasksBox.get('${subTasksNameListKey}_done');
+    if (rawList == null) {
+      return <bool>[];
+    }
+    return (rawList as List<dynamic>).cast<bool>();
   }
 
   void removeTaskFromBox(int index) {

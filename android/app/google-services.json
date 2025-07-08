@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "67409304255",
+    "project_id": "to-do-app-practice-97457",
+    "storage_bucket": "to-do-app-practice-97457.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67409304255:android:3071bdf4b2a408a47b840a",
+        "android_client_info": {
+          "package_name": "com.example.state_management_practice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNPJ59mLsuX3OdT5lsPND6WPt7OfdjuYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

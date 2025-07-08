@@ -51,6 +51,7 @@ class AddSubtaskNameButton extends StatelessWidget {
             },
           );
         },
+        tooltip: 'Add Subtask',
       ),
     );
   }
