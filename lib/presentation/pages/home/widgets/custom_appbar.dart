@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:state_management_practice/core/constants/app_text_styles.dart';
-import 'package:state_management_practice/modules/home/controllers/auth_controller.dart';
-import 'package:state_management_practice/modules/home/widgets/delete_account_dialog_widget.dart';
-import 'package:state_management_practice/modules/home/widgets/reset_password_dialog_widget.dart';
+import 'package:state_management_practice/presentation/pages/auth/controllers/auth_controller.dart';
+import 'package:state_management_practice/presentation/pages/auth/widgets/reset_password_dialog_widget.dart';
+import 'package:state_management_practice/presentation/pages/home/widgets/delete_account_dialog_widget.dart';
 
 class CustomAppbar extends StatelessWidget {
   const CustomAppbar({super.key});

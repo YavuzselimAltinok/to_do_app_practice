@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:state_management_practice/core/constants/app_colors.dart';
-import 'package:state_management_practice/modules/home/controllers/home_controller.dart';
-import 'package:state_management_practice/modules/home/widgets/add_subtask_name_button.dart';
-import 'package:state_management_practice/modules/home/widgets/add_task_name_button.dart';
-import 'package:state_management_practice/modules/home/widgets/category_tile_widget.dart';
-import 'package:state_management_practice/modules/home/widgets/custom_appbar.dart';
-import 'package:state_management_practice/modules/home/widgets/empty_state_widget.dart';
-import 'package:state_management_practice/modules/home/widgets/subtask_widget.dart';
+import 'package:state_management_practice/presentation/pages/home/controllers/home_controller.dart';
+import 'package:state_management_practice/presentation/pages/home/widgets/add_subtask_name_button.dart';
+import 'package:state_management_practice/presentation/pages/home/widgets/add_task_name_button.dart';
+import 'package:state_management_practice/presentation/pages/home/widgets/category_tile_widget.dart';
+import 'package:state_management_practice/presentation/pages/home/widgets/custom_appbar.dart';
+import 'package:state_management_practice/presentation/pages/home/widgets/empty_state_widget.dart';
+import 'package:state_management_practice/presentation/pages/home/widgets/subtask_widget.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

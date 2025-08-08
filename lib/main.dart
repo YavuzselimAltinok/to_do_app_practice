@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:state_management_practice/core/services/hive_service.dart';
+import 'package:state_management_practice/data/datasources/hive_service.dart';
 import 'package:state_management_practice/firebase_options.dart';
-import 'package:state_management_practice/modules/home/controllers/auth_controller.dart';
-import 'package:state_management_practice/modules/home/controllers/home_controller.dart';
-import 'package:state_management_practice/modules/home/views/home_view.dart';
-import 'package:state_management_practice/modules/home/views/login_view.dart';
+import 'package:state_management_practice/presentation/pages/auth/controllers/auth_controller.dart';
+import 'package:state_management_practice/presentation/pages/auth/views/login_view.dart';
+import 'package:state_management_practice/presentation/pages/home/controllers/home_controller.dart';
+import 'package:state_management_practice/presentation/pages/home/views/home_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

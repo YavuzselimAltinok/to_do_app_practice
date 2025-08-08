@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:state_management_practice/core/services/auth_service.dart';
-import 'package:state_management_practice/modules/home/views/forgot_password_view.dart';
-import 'package:state_management_practice/modules/home/views/home_view.dart';
-import 'package:state_management_practice/modules/home/views/login_view.dart';
-import 'package:state_management_practice/modules/home/views/signup_view.dart';
+import 'package:state_management_practice/data/datasources/auth_service.dart';
+import 'package:state_management_practice/presentation/pages/auth/views/forgot_password_view.dart';
+import 'package:state_management_practice/presentation/pages/auth/views/login_view.dart';
+import 'package:state_management_practice/presentation/pages/auth/views/signup_view.dart';
+import 'package:state_management_practice/presentation/pages/home/views/home_view.dart';
 
 class AuthController extends ChangeNotifier {
   AuthController._();

@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:state_management_practice/modules/home/controllers/auth_controller.dart';
-import 'package:state_management_practice/modules/home/widgets/custom_button_widget.dart';
-import 'package:state_management_practice/modules/home/widgets/custom_text_field_widget.dart';
+import 'package:state_management_practice/presentation/pages/auth/controllers/auth_controller.dart';
+import 'package:state_management_practice/presentation/pages/home/widgets/custom_button_widget.dart';
+import 'package:state_management_practice/presentation/pages/home/widgets/custom_text_field_widget.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

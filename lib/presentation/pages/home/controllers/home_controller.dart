@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:state_management_practice/core/constants/app_icons.dart';
 import 'package:state_management_practice/core/constants/app_text_styles.dart';
-import 'package:state_management_practice/core/services/hive_service.dart';
+import 'package:state_management_practice/data/datasources/hive_service.dart';
 
 class HomeController extends ChangeNotifier {
   HomeController._();

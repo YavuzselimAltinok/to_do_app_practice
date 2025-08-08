@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:state_management_practice/core/constants/app_colors.dart';
 import 'package:state_management_practice/core/constants/app_icons.dart';
-import 'package:state_management_practice/modules/home/controllers/home_controller.dart';
+import 'package:state_management_practice/presentation/pages/home/controllers/home_controller.dart';
 
 class AddSubtaskNameButton extends StatelessWidget {
   const AddSubtaskNameButton({super.key, required this.tileIndex});
