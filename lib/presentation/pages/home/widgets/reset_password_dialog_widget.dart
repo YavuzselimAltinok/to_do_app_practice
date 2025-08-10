@@ -67,7 +67,6 @@ class ResetPasswordDialogWidget extends StatelessWidget {
               authController.passwordController.text,
               authController.resetPasswordController.text,
             );
-            print("Password change attempted");
             if (authController.resetPasswordErrorMessage.isEmpty) {
               Get.back();
               Get.snackbar(

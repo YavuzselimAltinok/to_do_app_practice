@@ -54,7 +54,7 @@ class HomeController extends GetxController {
       subTasks: updatedSubTasks,
     );
 
-    await taskUseCases.updateTask(updatedTask);
+    await taskUseCases.saveTask(updatedTask);
     _tasks[index] = updatedTask;
   }
 
@@ -77,7 +77,7 @@ class HomeController extends GetxController {
     )..add(newSubTask);
     final TaskEntity updatedTask = task.copyWith(subTasks: updatedSubTasks);
 
-    await taskUseCases.updateTask(updatedTask);
+    await taskUseCases.saveTask(updatedTask);
     _tasks[taskIndex] = updatedTask;
   }
 
@@ -115,7 +115,7 @@ class HomeController extends GetxController {
       subTasks: updatedSubTasks,
     );
 
-    await taskUseCases.updateTask(updatedTask);
+    await taskUseCases.saveTask(updatedTask);
     _tasks[taskIndex] = updatedTask;
   }
 
@@ -126,7 +126,7 @@ class HomeController extends GetxController {
     )..removeAt(subTaskIndex);
     final TaskEntity updatedTask = task.copyWith(subTasks: updatedSubTasks);
 
-    await taskUseCases.updateTask(updatedTask);
+    await taskUseCases.saveTask(updatedTask);
     _tasks[taskIndex] = updatedTask;
   }
 

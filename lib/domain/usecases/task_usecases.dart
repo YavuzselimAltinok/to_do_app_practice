@@ -17,10 +17,6 @@ class TaskUseCases {
     await repository.saveTask(task);
   }
 
-  Future<void> updateTask(TaskEntity task) async {
-    await repository.updateTask(task);
-  }
-
   Future<void> deleteTask(String taskId) async {
     if (taskId.isEmpty) {
       throw Exception('Task ID is required');
@@ -31,7 +27,7 @@ class TaskUseCases {
   // Additional helper methods based on your app needs
   Future<void> toggleTaskStatus(TaskEntity task) async {
     final TaskEntity updatedTask = task.copyWith(isDone: !task.isDone);
-    await updateTask(updatedTask);
+    await saveTask(updatedTask);
   }
 
   Future<void> addSubTask(TaskEntity task, SubTaskEntity subTask) async {
@@ -39,7 +35,7 @@ class TaskUseCases {
       task.subTasks,
     )..add(subTask);
     final TaskEntity updatedTask = task.copyWith(subTasks: updatedSubTasks);
-    await updateTask(updatedTask);
+    await saveTask(updatedTask);
   }
 
   Future<void> toggleSubTaskStatus(TaskEntity task, int subTaskIndex) async {
@@ -50,6 +46,6 @@ class TaskUseCases {
       isDone: !subTasks[subTaskIndex].isDone,
     );
     final TaskEntity updatedTask = task.copyWith(subTasks: subTasks);
-    await updateTask(updatedTask);
+    await saveTask(updatedTask);
   }
 }

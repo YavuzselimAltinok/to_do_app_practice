@@ -94,8 +94,6 @@ class AuthController extends GetxController {
     _currentUser.value = null; // Clear current user
     clearControllers();
     clearErrorMessages();
-
-    // Use GetX navigation instead of Navigator
     popLoginView();
   }
 
@@ -105,10 +103,7 @@ class AuthController extends GetxController {
   ) async {
     clearErrorMessages();
     try {
-      await authUseCases.changePassword(
-        currentPassword,
-        newPassword,
-      ); //TODO: Fix the issue
+      await authUseCases.changePassword(currentPassword, newPassword);
     } catch (e) {
       resetPasswordErrorMessage.value = e.toString().replaceAll(
         'Exception: ',

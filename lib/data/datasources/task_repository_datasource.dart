@@ -6,7 +6,6 @@ import '../models/task_model.dart';
 abstract class TaskRepositoryDataSource {
   Future<List<TaskModel>> getAllTasks();
   Future<void> saveTask(TaskModel task);
-  Future<void> updateTask(TaskModel task);
   Future<void> deleteTask(String taskId);
 }
 
@@ -39,12 +38,6 @@ class TaskHiveRepositoryDataSource implements TaskRepositoryDataSource {
   Future<void> saveTask(TaskModel task) async {
     final String taskJson = json.encode(task.toJson());
     await tasksBox.put(task.id, taskJson);
-  }
-
-  @override
-  Future<void> updateTask(TaskModel task) async {
-    // Same as save for Hive
-    await saveTask(task);
   }
 
   @override
