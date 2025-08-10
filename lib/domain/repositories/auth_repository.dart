@@ -1,7 +1,7 @@
 import '../entities/user_entity.dart';
 
 abstract class AuthRepository {
-  // Basic auth operations (matching your current AuthService)
+  // Basic auth operations
   Future<UserEntity> login(String email, String password);
   Future<UserEntity> signUp(String email, String password);
   Future<void> logout();

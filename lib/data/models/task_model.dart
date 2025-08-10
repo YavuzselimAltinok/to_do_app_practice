@@ -15,8 +15,11 @@ class TaskModel extends TaskEntity {
       id: json['id'],
       name: json['name'],
       isDone: json['isDone'],
-      subTasks: (json['subTasks'] as List? ?? <dynamic>[])
-          .map((subTaskJson) => SubTaskModel.fromJson(subTaskJson))
+      subTasks: (json['subTasks'] as List<dynamic>? ?? <dynamic>[])
+          .map(
+            (dynamic subTaskJson) =>
+                SubTaskModel.fromJson(subTaskJson as Map<String, dynamic>),
+          )
           .toList(),
     );
   }

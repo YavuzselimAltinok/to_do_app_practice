@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:state_management_practice/core/constants/app_colors.dart';
 import 'package:state_management_practice/presentation/pages/home/controllers/home_controller.dart';
 import 'package:state_management_practice/presentation/pages/home/widgets/add_subtask_name_button.dart';
@@ -8,114 +9,84 @@ import 'package:state_management_practice/presentation/pages/home/widgets/custom
 import 'package:state_management_practice/presentation/pages/home/widgets/empty_state_widget.dart';
 import 'package:state_management_practice/presentation/pages/home/widgets/subtask_widget.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  @override
-  void initState() {
-    super.initState();
-    HomeController.instance.addListener(_onHomeStateChanged);
-  }
-
-  @override
-  void dispose() {
-    HomeController.instance.removeListener(_onHomeStateChanged);
-    super.dispose();
-  }
-
-  void _onHomeStateChanged() {
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final HomeController homeController = Get.find<HomeController>();
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: <Widget>[
             const CustomAppbar(),
             Expanded(
-              child: HomeController.instance.tasksNameList.isEmpty
-                  ? const EmptyStateWidget()
-                  : ListView.builder(
-                      itemCount: HomeController.instance.tasksNameList.length,
-                      itemBuilder: (BuildContext context, int tileIndex) {
-                        return ExpansionTile(
-                          backgroundColor:
-                              AppColors.expansionTileBackgroundColor,
-                          showTrailingIcon: false,
-                          title: CategoryTileWidget(tileIndex: tileIndex),
-                          children: <Widget>[
-                            SizedBox(
-                              height: HomeController.instance
-                                  .calculateListHeight(tileIndex),
-                              child: Stack(
-                                children: <Widget>[
-                                  ListView.builder(
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                          return SubTask(
-                                            subTaskName: HomeController.instance
-                                                .subTasksListGetter(
-                                                  HomeController
-                                                      .instance
-                                                      .tasksNameList[tileIndex],
-                                                )[index],
-                                            subTaskCondition: HomeController
-                                                .instance
-                                                .subTaskIsDoneListGetter(
-                                                  HomeController
-                                                      .instance
-                                                      .tasksNameList[tileIndex],
-                                                )[index],
-                                            onTapDoneButton: () {
-                                              HomeController.instance
-                                                  .changeSubTaskIsDone(
-                                                    tileIndex,
-                                                    index,
-                                                  );
-                                            },
-                                            subtaskIcon: HomeController.instance
-                                                .getSubTaskIcon(
+              child: Obx(
+                () => homeController.tasks.isEmpty
+                    ? const EmptyStateWidget()
+                    : ListView.builder(
+                        itemCount: homeController.tasks.length,
+                        itemBuilder: (BuildContext context, int tileIndex) {
+                          return ExpansionTile(
+                            backgroundColor:
+                                AppColors.expansionTileBackgroundColor,
+                            showTrailingIcon: false,
+                            title: CategoryTileWidget(tileIndex: tileIndex),
+                            children: <Widget>[
+                              SizedBox(
+                                height: homeController.calculateListHeight(
+                                  tileIndex,
+                                ),
+                                child: Stack(
+                                  children: <Widget>[
+                                    ListView.builder(
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                            return SubTask(
+                                              subTaskName: homeController
+                                                  .getSubTasks(tileIndex)[index]
+                                                  .name,
+                                              subTaskCondition: homeController
+                                                  .getSubTasks(tileIndex)[index]
+                                                  .isDone,
+                                              onTapDoneButton: () {
+                                                homeController.toggleSubTask(
                                                   tileIndex,
                                                   index,
-                                                ),
-                                            onTapRevomeSubTaskButton: () {
-                                              HomeController.instance
-                                                  .removeSubTaskFromBox(
+                                                );
+                                              },
+                                              subtaskIcon: homeController
+                                                  .getSubTaskIcon(
                                                     tileIndex,
                                                     index,
-                                                  );
-                                            },
-                                            subTaskTextStyle: HomeController
-                                                .instance
-                                                .getSubTaskTextStyle(
+                                                  ),
+                                              onTapRevomeSubTaskButton: () {
+                                                homeController.removeSubTask(
                                                   tileIndex,
                                                   index,
-                                                ),
-                                          );
-                                        },
-                                    itemCount: HomeController.instance
-                                        .subTasksListGetter(
-                                          HomeController
-                                              .instance
-                                              .tasksNameList[tileIndex],
-                                        )
-                                        .length,
-                                  ),
-                                  AddSubtaskNameButton(tileIndex: tileIndex),
-                                ],
+                                                );
+                                              },
+                                              subTaskTextStyle: homeController
+                                                  .getSubTaskTextStyle(
+                                                    tileIndex,
+                                                    index,
+                                                  ),
+                                            );
+                                          },
+                                      itemCount: homeController
+                                          .getSubTasks(tileIndex)
+                                          .length,
+                                    ),
+                                    AddSubtaskNameButton(tileIndex: tileIndex),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                            ],
+                          );
+                        },
+                      ),
+              ),
             ),
           ],
         ),

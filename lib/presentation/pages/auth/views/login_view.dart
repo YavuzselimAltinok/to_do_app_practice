@@ -1,35 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:state_management_practice/presentation/pages/auth/controllers/auth_controller.dart';
 import 'package:state_management_practice/presentation/pages/home/widgets/custom_button_widget.dart';
 import 'package:state_management_practice/presentation/pages/home/widgets/custom_text_field_widget.dart';
 
-class LoginView extends StatefulWidget {
+class LoginView extends StatelessWidget {
   const LoginView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
-}
-
-class _LoginViewState extends State<LoginView> {
-  @override
-  void initState() {
-    super.initState();
-    AuthController.instance.addListener(_onAuthStateChanged);
-  }
-
-  @override
-  void dispose() {
-    AuthController.instance.removeListener(_onAuthStateChanged);
-    super.dispose();
-  }
-
-  void _onAuthStateChanged() {
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final AuthController authController = Get.find<AuthController>();
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -44,48 +25,48 @@ class _LoginViewState extends State<LoginView> {
             CustomTextField(
               hint: "Enter Email",
               label: "Email",
-              controller: AuthController.instance.emailController,
+              controller: authController.emailController,
             ),
             const SizedBox(height: 20),
             CustomTextField(
               hint: "Enter Password",
               label: "Password",
-              controller: AuthController.instance.passwordController,
+              controller: authController.passwordController,
             ),
             const SizedBox(height: 2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  width: 250,
-                  child: AutoSizeText(
-                    minFontSize: 10,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    AuthController.instance.loginErrorMessage,
-                    style: const TextStyle(color: Colors.red),
+            Obx(
+              () => Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: 250,
+                    child: AutoSizeText(
+                      minFontSize: 10,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      authController.loginErrorMessage.value,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ),
-                ),
-                const Spacer(),
-                InkWell(
-                  onTap: () {
-                    AuthController.instance.popForgotPasswordView(context);
-                  },
-                  child: const Text("Forgot your password?"),
-                ),
-              ],
+                  const Spacer(),
+                  InkWell(
+                    onTap: authController.popForgotPasswordView,
+                    child: const Text("Forgot your password?"),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 30),
             CustomButton(
               label: "Login",
               onPressed: () async {
-                AuthController.instance.clearErrorMessages();
-                await AuthController.instance.loginUser(
-                  AuthController.instance.emailController.text,
-                  AuthController.instance.passwordController.text,
+                authController.clearErrorMessages();
+                await authController.loginUser(
+                  authController.emailController.text,
+                  authController.passwordController.text,
                 );
-                if (AuthController.instance.loginErrorMessage.isEmpty) {
-                  AuthController.instance.popHomeView(context);
+                if (authController.loginErrorMessage.isEmpty) {
+                  authController.popHomeView();
                 }
               },
             ),
@@ -95,9 +76,7 @@ class _LoginViewState extends State<LoginView> {
               children: <Widget>[
                 const Text("Don't have an account? "),
                 InkWell(
-                  onTap: () {
-                    AuthController.instance.popSignUpView(context);
-                  },
+                  onTap: authController.popSignUpView,
                   child: const Text(
                     "Signup",
                     style: TextStyle(color: Colors.red),

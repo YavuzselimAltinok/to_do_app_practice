@@ -9,27 +9,52 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserEntity> login(String email, String password) async {
-    return remoteDataSource.login(email, password);
+    try {
+      return await remoteDataSource.login(email, password);
+    } catch (e) {
+      // Handle error
+      rethrow;
+    }
   }
 
   @override
   Future<UserEntity> signUp(String email, String password) async {
-    return remoteDataSource.signUp(email, password);
+    try {
+      return await remoteDataSource.signUp(email, password);
+    } catch (e) {
+      // Handle error
+      rethrow;
+    }
   }
 
   @override
   Future<void> logout() async {
-    await remoteDataSource.logout();
+    try {
+      await remoteDataSource.logout();
+    } catch (e) {
+      // Handle error
+      rethrow;
+    }
   }
 
   @override
   Future<void> resetPassword(String email) async {
-    await remoteDataSource.resetPassword(email);
+    try {
+      await remoteDataSource.resetPassword(email);
+    } catch (e) {
+      // Handle error
+      rethrow;
+    }
   }
 
   @override
   Future<void> deleteAccount(String password) async {
-    await remoteDataSource.deleteAccount(password);
+    try {
+      await remoteDataSource.deleteAccount(password);
+    } catch (e) {
+      // Handle error
+      rethrow;
+    }
   }
 
   @override
@@ -37,7 +62,12 @@ class AuthRepositoryImpl implements AuthRepository {
     String currentPassword,
     String newPassword,
   ) async {
-    await remoteDataSource.changePassword(currentPassword, newPassword);
+    try {
+      await remoteDataSource.changePassword(currentPassword, newPassword);
+    } catch (e) {
+      // Handle error
+      rethrow;
+    }
   }
 
   @override

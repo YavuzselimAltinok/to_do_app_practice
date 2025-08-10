@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:state_management_practice/core/constants/app_colors.dart';
 import 'package:state_management_practice/core/constants/app_icons.dart';
 import 'package:state_management_practice/presentation/pages/home/controllers/home_controller.dart';
@@ -8,31 +9,27 @@ class AddTaskNameButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomeController homeController = Get.find<HomeController>();
     return IconButton(
       onPressed: () {
-        HomeController.instance.cleanTileEditingController();
+        homeController.cleanTileEditingController();
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Create New Task'),
               content: TextField(
-                controller: HomeController.instance.tileEditingController,
+                controller: homeController.tileEditingController,
                 decoration: const InputDecoration(hintText: 'Enter Task Name'),
               ),
               actions: <Widget>[
                 FloatingActionButton(
                   backgroundColor: AppColors.appMainColor,
                   onPressed: () {
-                    if (HomeController
-                        .instance
-                        .tileEditingController
-                        .text
-                        .isNotEmpty) {
-                      HomeController.instance.addTasksNameToList(
-                        HomeController.instance.tileEditingController.text,
+                    if (homeController.tileEditingController.text.isNotEmpty) {
+                      homeController.saveTask(
+                        homeController.tileEditingController.text,
                       );
-                      HomeController.instance.addTaskIsDoneList();
                       Navigator.of(context).pop();
                     }
                   },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:state_management_practice/core/constants/app_colors.dart';
 import 'package:state_management_practice/core/constants/app_icons.dart';
 import 'package:state_management_practice/presentation/pages/home/controllers/home_controller.dart';
@@ -9,6 +10,7 @@ class AddSubtaskNameButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomeController homeController = Get.find<HomeController>();
     return Positioned(
       bottom: 16,
       right: 16,
@@ -18,14 +20,14 @@ class AddSubtaskNameButton extends StatelessWidget {
           showDialog(
             context: context,
             builder: (BuildContext dialogContext) {
-              HomeController.instance.cleanTextEditingController();
+              homeController.cleanTextEditingController();
               return AlertDialog(
                 title: const Text("Create New SubTask"),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     TextField(
-                      controller: HomeController.instance.textEditingController,
+                      controller: homeController.textEditingController,
                       decoration: const InputDecoration(
                         hintText: "Enter subtask details",
                       ),
@@ -37,11 +39,10 @@ class AddSubtaskNameButton extends StatelessWidget {
                   FloatingActionButton(
                     backgroundColor: AppColors.appMainColor,
                     onPressed: () {
-                      HomeController.instance.addSubTasksNameList(
-                        HomeController.instance.textEditingController.text,
+                      homeController.addSubTask(
+                        homeController.textEditingController.text,
                         tileIndex,
                       );
-                      HomeController.instance.addSubTaskIsDoneList(tileIndex);
                       Navigator.of(dialogContext).pop();
                     },
                     child: const Icon(Icons.check, color: AppColors.white),

@@ -10,7 +10,8 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<List<TaskEntity>> getAllTasks() async {
     final List<TaskModel> taskModels = await localDataSource.getAllTasks();
-    return taskModels; // TaskModel extends TaskEntity, so this works
+    // Convert TaskModels to TaskEntities explicitly
+    return taskModels.map((TaskModel model) => model as TaskEntity).toList();
   }
 
   @override
@@ -28,13 +29,5 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<void> deleteTask(String taskId) async {
     await localDataSource.deleteTask(taskId);
-  }
-
-  @override
-  Future<void> saveAllTasks(List<TaskEntity> tasks) async {
-    final List<TaskModel> taskModels = tasks
-        .map((TaskEntity task) => TaskModel.fromEntity(task))
-        .toList();
-    await localDataSource.saveAllTasks(taskModels);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:state_management_practice/core/constants/app_icons.dart';
 import 'package:state_management_practice/presentation/pages/home/controllers/home_controller.dart';
 
@@ -9,19 +10,20 @@ class CategoryTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomeController homeController = Get.find<HomeController>();
     return Row(
       children: <Widget>[
         const SizedBox(width: 10),
         GestureDetector(
           onTap: () {
-            HomeController.instance.changeIsDone(tileIndex);
+            homeController.toggleTask(tileIndex);
           },
           child: Container(
             height: 24,
             width: 24,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: HomeController.instance.getTaskIcon(tileIndex),
+                image: homeController.getTaskIcon(tileIndex),
               ),
             ),
           ),
@@ -33,14 +35,14 @@ class CategoryTileWidget extends StatelessWidget {
             minFontSize: 14,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            HomeController.instance.tasksNameList[tileIndex],
-            style: HomeController.instance.getTaskTextStyle(tileIndex),
+            homeController.tasks[tileIndex].name,
+            style: homeController.getTaskTextStyle(tileIndex),
           ),
         ),
         const Spacer(),
         IconButton(
           onPressed: () {
-            HomeController.instance.removeTaskFromBox(tileIndex);
+            homeController.deleteTask(tileIndex);
           },
           icon: Image.asset(AppIcons.delete, width: 24, height: 24),
         ),

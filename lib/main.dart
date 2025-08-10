@@ -1,17 +1,24 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:state_management_practice/data/datasources/hive_service.dart';
-import 'package:state_management_practice/firebase_options.dart';
-import 'package:state_management_practice/presentation/pages/auth/controllers/auth_controller.dart';
-import 'package:state_management_practice/presentation/pages/auth/views/login_view.dart';
-import 'package:state_management_practice/presentation/pages/home/controllers/home_controller.dart';
-import 'package:state_management_practice/presentation/pages/home/views/home_view.dart';
+import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:state_management_practice/app/bindings/initial_binding.dart';
+import 'package:state_management_practice/domain/entities/user_entity.dart';
+import 'app/routes/app_pages.dart';
+import 'app/routes/app_routes.dart';
+import 'domain/usecases/auth_usecases.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await HiveService.instance.initLocalDatabase();
-  HomeController.instance.fetchTasks();
+
+  // Initialize Hive
+  await Hive.initFlutter();
+  await Hive.openBox<String>('tasks');
+
   runApp(const MainApp());
 }
 
@@ -20,15 +27,24 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      title: 'Todo App',
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: (AuthController.instance.userIsLoggedIn()
-              ? const HomeView()
-              : const LoginView()),
-        ),
-      ),
+      initialBinding: InitialBinding(),
+      initialRoute: _getInitialRoute(),
+      getPages: AppPages.routes,
     );
+  }
+}
+
+String _getInitialRoute() {
+  // Check if user is logged in using GetX dependency injection
+  try {
+    final AuthUseCases authUseCases = Get.find<AuthUseCases>();
+    final UserEntity? currentUser = authUseCases.repository.getCurrentUser();
+    return currentUser != null ? AppRoutes.home : AppRoutes.login;
+  } catch (e) {
+    // If dependencies aren't ready yet, default to login
+    return AppRoutes.login;
   }
 }

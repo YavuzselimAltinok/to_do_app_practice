@@ -8,7 +8,6 @@ abstract class TaskRepositoryDataSource {
   Future<void> saveTask(TaskModel task);
   Future<void> updateTask(TaskModel task);
   Future<void> deleteTask(String taskId);
-  Future<void> saveAllTasks(List<TaskModel> tasks);
 }
 
 class TaskHiveRepositoryDataSource implements TaskRepositoryDataSource {
@@ -51,13 +50,5 @@ class TaskHiveRepositoryDataSource implements TaskRepositoryDataSource {
   @override
   Future<void> deleteTask(String taskId) async {
     await tasksBox.delete(taskId);
-  }
-
-  @override
-  Future<void> saveAllTasks(List<TaskModel> tasks) async {
-    await tasksBox.clear();
-    for (final TaskModel task in tasks) {
-      await saveTask(task);
-    }
   }
 }

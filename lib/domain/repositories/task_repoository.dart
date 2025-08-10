@@ -6,7 +6,4 @@ abstract class TaskRepository {
   Future<void> saveTask(TaskEntity task);
   Future<void> updateTask(TaskEntity task);
   Future<void> deleteTask(String taskId);
-
-  // Bulk operations
-  Future<void> saveAllTasks(List<TaskEntity> tasks);
 }

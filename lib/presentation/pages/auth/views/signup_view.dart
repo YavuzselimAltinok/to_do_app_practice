@@ -1,35 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:state_management_practice/presentation/pages/auth/controllers/auth_controller.dart';
 import 'package:state_management_practice/presentation/pages/home/widgets/custom_button_widget.dart';
 import 'package:state_management_practice/presentation/pages/home/widgets/custom_text_field_widget.dart';
 
-class SignUpView extends StatefulWidget {
+class SignUpView extends StatelessWidget {
   const SignUpView({super.key});
 
   @override
-  State<SignUpView> createState() => _SignUpViewState();
-}
-
-class _SignUpViewState extends State<SignUpView> {
-  @override
-  void initState() {
-    super.initState();
-    AuthController.instance.addListener(_onAuthStateChanged);
-  }
-
-  @override
-  void dispose() {
-    AuthController.instance.removeListener(_onAuthStateChanged);
-    super.dispose();
-  }
-
-  void _onAuthStateChanged() {
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final AuthController authController = Get.find<AuthController>();
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -44,35 +25,37 @@ class _SignUpViewState extends State<SignUpView> {
             CustomTextField(
               hint: "Enter Email",
               label: "Email",
-              controller: AuthController.instance.emailController,
+              controller: authController.emailController,
             ),
             const SizedBox(height: 20),
             CustomTextField(
               hint: "Enter Password",
               label: "Password",
-              controller: AuthController.instance.passwordController,
+              controller: authController.passwordController,
             ),
-            SizedBox(
-              width: 500,
-              child: AutoSizeText(
-                minFontSize: 10,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                AuthController.instance.signUpErrorMessage,
-                style: const TextStyle(color: Colors.red),
+            Obx(
+              () => SizedBox(
+                width: 500,
+                child: AutoSizeText(
+                  minFontSize: 10,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  authController.signUpErrorMessage.value,
+                  style: const TextStyle(color: Colors.red),
+                ),
               ),
             ),
             const SizedBox(height: 30),
             CustomButton(
               label: "SignUp",
               onPressed: () async {
-                AuthController.instance.clearErrorMessages();
-                await AuthController.instance.signUpUser(
-                  AuthController.instance.emailController.text,
-                  AuthController.instance.passwordController.text,
+                authController.clearErrorMessages();
+                await authController.signUpUser(
+                  authController.emailController.text,
+                  authController.passwordController.text,
                 );
-                if (AuthController.instance.signUpErrorMessage.isEmpty) {
-                  AuthController.instance.popHomeView(context);
+                if (authController.signUpErrorMessage.isEmpty) {
+                  authController.popHomeView();
                 }
               },
             ),
@@ -82,9 +65,7 @@ class _SignUpViewState extends State<SignUpView> {
               children: <Widget>[
                 const Text("Already have an account? "),
                 InkWell(
-                  onTap: () {
-                    AuthController.instance.popLoginView(context);
-                  },
+                  onTap: authController.popLoginView,
                   child: const Text(
                     "Login",
                     style: TextStyle(color: Colors.red),

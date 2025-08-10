@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:state_management_practice/core/constants/app_text_styles.dart';
 import 'package:state_management_practice/presentation/pages/auth/controllers/auth_controller.dart';
-import 'package:state_management_practice/presentation/pages/auth/widgets/reset_password_dialog_widget.dart';
+import 'package:state_management_practice/presentation/pages/home/widgets/reset_password_dialog_widget.dart';
 import 'package:state_management_practice/presentation/pages/home/widgets/delete_account_dialog_widget.dart';
 
 class CustomAppbar extends StatelessWidget {
@@ -9,6 +10,8 @@ class CustomAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthController authController = Get.find<AuthController>();
+
     return SizedBox(
       width: double.infinity,
       height: 80,
@@ -36,7 +39,7 @@ class CustomAppbar extends StatelessWidget {
                   _showDeleteAccountDialog(context);
                   break;
                 case 'logout':
-                  AuthController.instance.logout(context);
+                  authController.logout();
                   break;
               }
             },
@@ -81,7 +84,8 @@ class CustomAppbar extends StatelessWidget {
   }
 
   void _showResetPasswordDialog(BuildContext context) {
-    AuthController.instance.clearControllers();
+    final AuthController authController = Get.find<AuthController>();
+    authController.clearControllers();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -91,7 +95,8 @@ class CustomAppbar extends StatelessWidget {
   }
 
   void _showDeleteAccountDialog(BuildContext context) {
-    AuthController.instance.clearControllers();
+    final AuthController authController = Get.find<AuthController>();
+    authController.clearControllers();
     showDialog(
       context: context,
       builder: (BuildContext context) {

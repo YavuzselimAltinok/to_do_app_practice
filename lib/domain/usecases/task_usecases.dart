@@ -28,10 +28,6 @@ class TaskUseCases {
     await repository.deleteTask(taskId);
   }
 
-  Future<void> saveAllTasks(List<TaskEntity> tasks) async {
-    await repository.saveAllTasks(tasks);
-  }
-
   // Additional helper methods based on your app needs
   Future<void> toggleTaskStatus(TaskEntity task) async {
     final TaskEntity updatedTask = task.copyWith(isDone: !task.isDone);

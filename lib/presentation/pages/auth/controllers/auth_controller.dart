@@ -1,17 +1,24 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:state_management_practice/data/datasources/auth_service.dart';
-import 'package:state_management_practice/presentation/pages/auth/views/forgot_password_view.dart';
-import 'package:state_management_practice/presentation/pages/auth/views/login_view.dart';
-import 'package:state_management_practice/presentation/pages/auth/views/signup_view.dart';
-import 'package:state_management_practice/presentation/pages/home/views/home_view.dart';
+import 'package:get/get.dart';
+import 'package:state_management_practice/app/routes/app_routes.dart';
+import 'package:state_management_practice/domain/entities/user_entity.dart';
+import 'package:state_management_practice/domain/usecases/auth_usecases.dart';
 
-class AuthController extends ChangeNotifier {
-  AuthController._();
-  static final AuthController instance = AuthController._();
+class AuthController extends GetxController {
+  AuthController(this.authUseCases);
+  final AuthUseCases authUseCases;
 
   bool userIsLoggedIn() {
-    return AuthService.instance.currentUser != null;
+    return _currentUser.value != null;
+  }
+
+  final Rx<UserEntity?> _currentUser = Rx<UserEntity?>(null);
+  UserEntity? get currentUser => _currentUser.value;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _currentUser.value = authUseCases.getCurrentUser();
   }
 
   TextEditingController emailController = TextEditingController();
@@ -24,115 +31,125 @@ class AuthController extends ChangeNotifier {
     resetPasswordController.clear();
   }
 
-  String signUpErrorMessage = "";
-  String loginErrorMessage = "";
-  String resetPasswordErrorMessage = "";
-  String deleteAccountErrorMessage = "";
+  RxString signUpErrorMessage = "".obs;
+  RxString loginErrorMessage = "".obs;
+  RxString resetPasswordErrorMessage = "".obs;
+  RxString deleteAccountErrorMessage = "".obs;
+
+  String get signUpError => signUpErrorMessage.value;
+  String get loginError => loginErrorMessage.value;
+  String get resetPasswordError => resetPasswordErrorMessage.value;
+  String get deleteAccountError => deleteAccountErrorMessage.value;
 
   void clearErrorMessages() {
-    signUpErrorMessage = "";
-    loginErrorMessage = "";
-    resetPasswordErrorMessage = "";
-    deleteAccountErrorMessage = "";
+    signUpErrorMessage.value = "";
+    loginErrorMessage.value = "";
+    resetPasswordErrorMessage.value = "";
+    deleteAccountErrorMessage.value = "";
   }
 
   Future<void> signUpUser(String email, String password) async {
     try {
-      await AuthService.instance.signUp(email: email, password: password);
-    } on FirebaseAuthException catch (e) {
-      signUpErrorMessage = e.message ?? "An error occurred during sign up.";
-      notifyListeners();
+      clearErrorMessages();
+      final UserEntity user = await authUseCases.signUp(email, password);
+      _currentUser.value = user; // Update current user
+      popHomeView();
+    } catch (e) {
+      // Catch generic Exception instead of FirebaseAuthException
+      signUpErrorMessage.value = e.toString().replaceAll('Exception: ', '');
     }
   }
 
   Future<void> loginUser(String email, String password) async {
     try {
-      await AuthService.instance.login(email: email, password: password);
-    } on FirebaseAuthException catch (e) {
-      loginErrorMessage = e.message ?? "An error occurred during login.";
-      notifyListeners();
+      clearErrorMessages();
+      final UserEntity user = await authUseCases.login(email, password);
+      _currentUser.value = user; // Update current user
+    } catch (e) {
+      // Catch generic Exception instead of FirebaseAuthException
+      loginErrorMessage.value = e.toString().replaceAll('Exception: ', '');
     }
   }
 
   Future<void> resetPassword(String email) async {
     try {
-      await AuthService.instance.resetPassword(email);
-    } on FirebaseAuthException catch (e) {
-      loginErrorMessage =
-          e.message ?? "An error occurred during password reset.";
-      notifyListeners();
+      await authUseCases.resetPassword(email);
+      Get.snackbar(
+        'Success',
+        'Password reset email sent to $email',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (e) {
+      resetPasswordErrorMessage.value = e.toString().replaceAll(
+        'Exception: ',
+        '',
+      );
     }
   }
 
-  Future<void> logout(BuildContext context) async {
-    await AuthService.instance.signOut();
-    popLoginView(context);
+  Future<void> logout() async {
+    await authUseCases.logout();
+    _currentUser.value = null; // Clear current user
+    clearControllers();
+    clearErrorMessages();
+
+    // Use GetX navigation instead of Navigator
+    popLoginView();
   }
 
-  Future<void> resetPasswordFromCurrentPassword(
+  Future<void> changePassword(
     String currentPassword,
     String newPassword,
   ) async {
+    clearErrorMessages();
     try {
-      await AuthService.instance.resetPasswordFromCurrentPassword(
-        currentPassword: currentPassword,
-        newPassword: newPassword,
+      await authUseCases.changePassword(
+        currentPassword,
+        newPassword,
+      ); //TODO: Fix the issue
+    } catch (e) {
+      resetPasswordErrorMessage.value = e.toString().replaceAll(
+        'Exception: ',
+        '',
       );
-    } on FirebaseAuthException catch (e) {
-      resetPasswordErrorMessage =
-          e.message ?? "An error occurred during password reset.";
-      notifyListeners();
     }
   }
 
   Future<void> deleteAccount(String password) async {
     try {
-      await AuthService.instance.deleteAccount(
-        email: AuthService.instance.currentUser?.email ?? "",
-        password: password,
+      await authUseCases.deleteAccount(password);
+    } catch (e) {
+      deleteAccountErrorMessage.value = e.toString().replaceAll(
+        'Exception: ',
+        '',
       );
-    } on FirebaseAuthException catch (e) {
-      deleteAccountErrorMessage =
-          e.message ?? "An error occurred during account deletion.";
-      notifyListeners();
     }
   }
 
-  void popSignUpView(BuildContext context) {
+  // Convert your navigation methods to GetX (remove BuildContext)
+  void popSignUpView() {
     clearControllers();
     clearErrorMessages();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => const SignUpView()),
-    );
+    Get.offNamed(AppRoutes.signup);
   }
 
-  void popLoginView(BuildContext context) {
+  void popLoginView() {
     clearControllers();
     clearErrorMessages();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => const LoginView()),
-    );
+    Get.offNamed(AppRoutes.login);
   }
 
-  void popHomeView(BuildContext context) {
+  void popHomeView() {
     clearControllers();
     clearErrorMessages();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => const HomeView()),
-    );
+    Get.offNamed(AppRoutes.home);
   }
 
-  void popForgotPasswordView(BuildContext context) {
+  void popForgotPasswordView() {
     clearControllers();
     clearErrorMessages();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => const ForgotPasswordView(),
-      ),
-    );
+    Get.offNamed(AppRoutes.forgotPassword);
   }
 }

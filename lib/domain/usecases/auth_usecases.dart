@@ -6,26 +6,21 @@ class AuthUseCases {
   final AuthRepository repository;
 
   Future<UserEntity> login(String email, String password) async {
-    if (email.isEmpty) {
-      throw Exception('Email is required');
+    try {
+      return await repository.login(email, password);
+    } catch (e) {
+      // Handle error
+      rethrow;
     }
-    if (password.isEmpty) {
-      throw Exception('Password is required');
-    }
-    return repository.login(email, password);
   }
 
   Future<UserEntity> signUp(String email, String password) async {
-    if (email.isEmpty) {
-      throw Exception('Email is required');
+    try {
+      return await repository.signUp(email, password);
+    } catch (e) {
+      // Handle error
+      rethrow;
     }
-    if (password.isEmpty) {
-      throw Exception('Password is required');
-    }
-    if (password.length < 6) {
-      throw Exception('Password must be at least 6 characters');
-    }
-    return repository.signUp(email, password);
   }
 
   Future<void> logout() async {
@@ -33,32 +28,36 @@ class AuthUseCases {
   }
 
   Future<void> resetPassword(String email) async {
-    if (email.isEmpty) {
-      throw Exception('Email is required');
+    try {
+      await repository.resetPassword(email);
+    } catch (e) {
+      // Handle error
+      rethrow;
     }
-    await repository.resetPassword(email);
   }
 
   Future<void> deleteAccount(String password) async {
-    if (password.isEmpty) {
-      throw Exception('Password is required');
+    try {
+      await repository.deleteAccount(password);
+    } catch (e) {
+      // Handle error
+      rethrow;
     }
-    await repository.deleteAccount(password);
   }
 
   Future<void> changePassword(
     String currentPassword,
     String newPassword,
   ) async {
-    if (currentPassword.isEmpty) {
-      throw Exception('Current password is required');
+    try {
+      await repository.changePassword(currentPassword, newPassword);
+    } catch (e) {
+      // Handle error
+      rethrow;
     }
-    if (newPassword.isEmpty) {
-      throw Exception('New password is required');
-    }
-    if (newPassword.length < 6) {
-      throw Exception('New password must be at least 6 characters');
-    }
-    await repository.changePassword(currentPassword, newPassword);
+  }
+
+  UserEntity? getCurrentUser() {
+    return repository.getCurrentUser();
   }
 }
