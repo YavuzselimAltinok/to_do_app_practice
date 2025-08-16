@@ -55,7 +55,6 @@ class AuthController extends GetxController {
       _currentUser.value = user; // Update current user
       popHomeView();
     } catch (e) {
-      // Catch generic Exception instead of FirebaseAuthException
       signUpErrorMessage.value = e.toString().replaceAll('Exception: ', '');
     }
   }
@@ -65,8 +64,8 @@ class AuthController extends GetxController {
       clearErrorMessages();
       final UserEntity user = await authUseCases.login(email, password);
       _currentUser.value = user; // Update current user
+      popHomeView(); // Navigate to home after successful login
     } catch (e) {
-      // Catch generic Exception instead of FirebaseAuthException
       loginErrorMessage.value = e.toString().replaceAll('Exception: ', '');
     }
   }
@@ -123,7 +122,6 @@ class AuthController extends GetxController {
     }
   }
 
-  // Convert your navigation methods to GetX (remove BuildContext)
   void popSignUpView() {
     clearControllers();
     clearErrorMessages();

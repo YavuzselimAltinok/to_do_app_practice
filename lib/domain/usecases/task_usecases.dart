@@ -1,4 +1,4 @@
-import 'package:state_management_practice/domain/repositories/task_repoository.dart';
+import 'package:state_management_practice/domain/repositories/task_repository.dart';
 
 import '../entities/task_entity.dart';
 

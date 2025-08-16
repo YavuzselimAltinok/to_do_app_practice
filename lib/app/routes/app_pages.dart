@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:state_management_practice/app/bindings/home_binding.dart';
 import '../../../presentation/pages/auth/views/forgot_password_view.dart';
 import '../../../presentation/pages/auth/views/login_view.dart';
 import '../../../presentation/pages/auth/views/signup_view.dart';
@@ -15,6 +16,10 @@ class AppPages {
       name: AppRoutes.forgotPassword,
       page: () => const ForgotPasswordView(),
     ),
-    GetPage(name: AppRoutes.home, page: () => const HomeView()),
+    GetPage(
+      name: AppRoutes.home,
+      page: () => const HomeView(),
+      binding: HomeBinding(),
+    ),
   ];
 }

@@ -31,7 +31,7 @@ class DeleteAccountDialogWidget extends StatelessWidget {
                     width: 400,
                     height: 20,
                     child: AutoSizeText(
-                      authController.deleteAccountErrorMessage.value,
+                      authController.deleteAccountError,
                       style: const TextStyle(color: Colors.red),
                       minFontSize: 10,
                       maxLines: 1,

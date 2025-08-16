@@ -34,28 +34,29 @@ class LoginView extends StatelessWidget {
               controller: authController.passwordController,
             ),
             const SizedBox(height: 2),
-            Obx(
-              () => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Obx(
+                  () => SizedBox(
                     width: 250,
                     child: AutoSizeText(
                       minFontSize: 10,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      authController.loginErrorMessage.value,
+                      authController.loginError,
                       style: const TextStyle(color: Colors.red),
                     ),
                   ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: authController.popForgotPasswordView,
-                    child: const Text("Forgot your password?"),
-                  ),
-                ],
-              ),
+                ),
+                const Spacer(),
+                InkWell(
+                  onTap: authController.popForgotPasswordView,
+                  child: const Text("Forgot your password?"),
+                ),
+              ],
             ),
+
             const SizedBox(height: 30),
             CustomButton(
               label: "Login",
@@ -65,9 +66,6 @@ class LoginView extends StatelessWidget {
                   authController.emailController.text,
                   authController.passwordController.text,
                 );
-                if (authController.loginErrorMessage.isEmpty) {
-                  authController.popHomeView();
-                }
               },
             ),
             const SizedBox(height: 5),

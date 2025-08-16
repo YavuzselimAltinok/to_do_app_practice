@@ -23,6 +23,10 @@ class AuthUseCases {
     }
   }
 
+  Future<void> saveUser(UserEntity user) async {
+    await repository.saveUser(user);
+  }
+
   Future<void> logout() async {
     await repository.logout();
   }
@@ -45,12 +49,19 @@ class AuthUseCases {
     }
   }
 
+  Future<void> deleteUser(String userId) async {
+    await repository.deleteUser(userId);
+  }
+
   Future<void> changePassword(
     String currentPassword,
     String newPassword,
   ) async {
     try {
       await repository.changePassword(currentPassword, newPassword);
+      if (currentPassword == newPassword) {
+        throw Exception('New password cannot be the same as current password');
+      }
     } catch (e) {
       // Handle error
       rethrow;

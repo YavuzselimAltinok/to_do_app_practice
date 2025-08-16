@@ -39,7 +39,7 @@ class ResetPasswordDialogWidget extends StatelessWidget {
                     width: 300,
                     height: 20,
                     child: AutoSizeText(
-                      authController.resetPasswordErrorMessage.value,
+                      authController.resetPasswordError,
                       style: const TextStyle(color: Colors.red),
                       minFontSize: 10,
                       maxLines: 1,

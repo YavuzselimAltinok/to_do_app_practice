@@ -1,25 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<UserModel> login(String email, String password);
   Future<UserModel> signUp(String email, String password);
+  Future<void> saveUser(UserModel user);
   Future<void> logout();
   Future<void> resetPassword(String email);
   Future<void> deleteAccount(String password);
+  Future<void> deleteUser(String userId);
   Future<void> changePassword(String currentPassword, String newPassword);
   UserModel? getCurrentUser();
 }
 
 class AuthFirebaseDataSource implements AuthRemoteDataSource {
-  AuthFirebaseDataSource(this.firebaseAuth);
-  final FirebaseAuth firebaseAuth;
+  AuthFirebaseDataSource(this._auth, this._firestore);
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
 
   @override
   Future<UserModel> login(String email, String password) async {
     try {
-      final UserCredential credential = await firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
+      final UserCredential credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       return UserModel.fromFirebaseUser(credential.user!);
     } on FirebaseAuthException catch (e) {
       throw Exception(_getErrorMessage(e));
@@ -29,7 +35,7 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
   @override
   Future<UserModel> signUp(String email, String password) async {
     try {
-      final UserCredential credential = await firebaseAuth
+      final UserCredential credential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
       return UserModel.fromFirebaseUser(credential.user!);
     } on FirebaseAuthException catch (e) {
@@ -38,14 +44,31 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
   }
 
   @override
+  Future<void> saveUser(UserModel user) async {
+    final User? firebaseUser = _auth.currentUser;
+    if (firebaseUser == null) {
+      throw Exception('No user logged in');
+    }
+
+    try {
+      await _firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .set(user.toJson());
+    } catch (e) {
+      throw Exception('Failed to save user: $e');
+    }
+  }
+
+  @override
   Future<void> logout() async {
-    await firebaseAuth.signOut();
+    await _auth.signOut();
   }
 
   @override
   Future<void> resetPassword(String email) async {
     try {
-      await firebaseAuth.sendPasswordResetEmail(email: email);
+      await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       throw Exception(_getErrorMessage(e));
     }
@@ -53,7 +76,7 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
 
   @override
   Future<void> deleteAccount(String password) async {
-    final User? user = firebaseAuth.currentUser;
+    final User? user = _auth.currentUser;
     if (user == null) {
       throw Exception('No user logged in');
     }
@@ -71,11 +94,20 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
   }
 
   @override
+  Future<void> deleteUser(String userId) async {
+    try {
+      await _firestore.collection('users').doc(userId).delete();
+    } catch (e) {
+      throw Exception('Failed to delete user: $e');
+    }
+  }
+
+  @override
   Future<void> changePassword(
     String currentPassword,
     String newPassword,
   ) async {
-    final User? user = firebaseAuth.currentUser;
+    final User? user = _auth.currentUser;
     if (user == null) {
       throw Exception('No user logged in');
     }
@@ -94,7 +126,7 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
 
   @override
   UserModel? getCurrentUser() {
-    final User? user = firebaseAuth.currentUser;
+    final User? user = _auth.currentUser;
     return user != null ? UserModel.fromFirebaseUser(user) : null;
   }
 

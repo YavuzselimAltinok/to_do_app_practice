@@ -40,7 +40,7 @@ class SignUpView extends StatelessWidget {
                   minFontSize: 10,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  authController.signUpErrorMessage.value,
+                  authController.signUpError,
                   style: const TextStyle(color: Colors.red),
                 ),
               ),
@@ -54,9 +54,6 @@ class SignUpView extends StatelessWidget {
                   authController.emailController.text,
                   authController.passwordController.text,
                 );
-                if (authController.signUpErrorMessage.isEmpty) {
-                  authController.popHomeView();
-                }
               },
             ),
             const SizedBox(height: 5),

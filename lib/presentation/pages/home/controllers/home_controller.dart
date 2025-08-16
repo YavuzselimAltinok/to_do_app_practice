@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 import 'package:state_management_practice/core/constants/app_icons.dart';
 import 'package:state_management_practice/core/constants/app_text_styles.dart';
@@ -12,16 +13,32 @@ class HomeController extends GetxController {
   final RxList<TaskEntity> _tasks = <TaskEntity>[].obs;
   List<TaskEntity> get tasks => _tasks.toList();
 
+  // Add loading state
+  final RxBool _isLoading = false.obs;
+  bool get isLoading => _isLoading.value;
+
   TextEditingController textEditingController = TextEditingController();
   TextEditingController tileEditingController = TextEditingController();
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    fetchTasks();
+    await refreshData();
   }
 
-  void fetchTasks() async {
+  // Public method to refresh data
+  Future<void> refreshData() async {
+    _isLoading.value = true;
+    try {
+      await fetchTasks();
+    } catch (e) {
+      throw Exception('HomeController: refreshData error: $e');
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchTasks() async {
     final List<TaskEntity> tasks = await taskUseCases.getAllTasks();
     _tasks.value = tasks;
   }
@@ -34,7 +51,8 @@ class HomeController extends GetxController {
       subTasks: <SubTaskEntity>[],
     );
     await taskUseCases.saveTask(newTask);
-    _tasks.add(newTask);
+    // Force reload tasks from storage after saving
+    await fetchTasks();
   }
 
   Future<void> toggleTask(int index) async {

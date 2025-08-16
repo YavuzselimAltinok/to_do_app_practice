@@ -23,7 +23,9 @@ class HomeView extends StatelessWidget {
             const CustomAppbar(),
             Expanded(
               child: Obx(
-                () => homeController.tasks.isEmpty
+                () => homeController.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : homeController.tasks.isEmpty
                     ? const EmptyStateWidget()
                     : ListView.builder(
                         itemCount: homeController.tasks.length,

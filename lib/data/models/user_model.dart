@@ -4,6 +4,11 @@ import '../../domain/entities/user_entity.dart';
 class UserModel extends UserEntity {
   const UserModel({required super.id, required super.email});
 
+  // Convert from UserEntity to UserModel
+  factory UserModel.fromEntity(UserEntity user) {
+    return UserModel(id: user.id, email: user.email);
+  }
+
   // Convert from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(id: json['id'], email: json['email']);
