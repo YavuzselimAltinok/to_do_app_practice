@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:state_management_practice/app/bindings/home_binding.dart';
-import '../../../presentation/pages/auth/views/forgot_password_view.dart';
-import '../../../presentation/pages/auth/views/login_view.dart';
-import '../../../presentation/pages/auth/views/signup_view.dart';
-import '../../../presentation/pages/home/views/home_view.dart';
+import '../../features/auth/presentation/pages/auth/views/forgot_password_view.dart';
+import '../../features/auth/presentation/pages/auth/views/login_view.dart';
+import '../../features/auth/presentation/pages/auth/views/signup_view.dart';
+import '../../features/tasks/presentation/pages/home/views/home_view.dart';
 import 'app_routes.dart';
 
 class AppPages {

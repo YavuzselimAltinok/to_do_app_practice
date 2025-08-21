@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:state_management_practice/data/datasources/task_repository_datasource.dart';
-import 'package:state_management_practice/data/repositories/task_repository_impl.dart';
-import 'package:state_management_practice/domain/repositories/task_repository.dart';
-import 'package:state_management_practice/domain/usecases/task_usecases.dart';
-import '../../data/datasources/auth_remote_datasource.dart';
-import '../../data/repositories/auth_repository_impl.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../../domain/usecases/auth_usecases.dart';
-import '../../presentation/pages/auth/controllers/auth_controller.dart';
+import 'package:state_management_practice/features/tasks/data/datasources/task_repository_datasource.dart';
+import 'package:state_management_practice/features/tasks/data/repositories/task_repository_impl.dart';
+import 'package:state_management_practice/features/tasks/domain/repositories/task_repository.dart';
+import 'package:state_management_practice/features/tasks/domain/usecases/task_usecases.dart';
+import '../../features/auth/data/datasources/auth_remote_datasource.dart';
+import '../../features/auth/data/repositories/auth_repository_impl.dart';
+import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../features/auth/domain/usecases/auth_usecases.dart';
+import '../../features/auth/presentation/pages/auth/controllers/auth_controller.dart';
 
 class InitialBinding extends Bindings {
   @override

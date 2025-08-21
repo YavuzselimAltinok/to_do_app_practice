@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:state_management_practice/app/bindings/initial_binding.dart';
-import 'package:state_management_practice/domain/entities/user_entity.dart';
+import 'package:state_management_practice/features/auth/domain/entities/user_entity.dart';
 import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
-import 'domain/usecases/auth_usecases.dart';
+import 'features/auth/domain/usecases/auth_usecases.dart';
 import 'firebase_options.dart';
 
 void main() async {
